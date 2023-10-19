@@ -170,14 +170,23 @@ Address:  174.43.238.89
 ```
 PS C:\Users\b> tracert www.ynov.com
 
-Détermination de l’itinéraire vers www.ynov.com [2606:4700:20::681a:ae9]
+Détermination de l’itinéraire vers www.ynov.com [104.26.11.233]
 avec un maximum de 30 sauts :
 
-  1     1 ms     1 ms     1 ms  bouygues.lan [2001:861:4482:b250:46d4:54ff:fe85:8895]
-  2     *        *        *     Délai d’attente de la demande dépassé.
+  1     4 ms     1 ms     1 ms  10.33.79.254
+  2     2 ms     2 ms     2 ms  145.117.7.195.rev.sfr.net [195.7.117.145]
+  3     2 ms     3 ms     3 ms  237.195.79.86.rev.sfr.net [86.79.195.237]
+  4     4 ms    15 ms    13 ms  196.224.65.86.rev.sfr.net [86.65.224.196]
+  5    12 ms    13 ms    11 ms  12.148.6.194.rev.sfr.net [194.6.148.12]
+  6    18 ms    13 ms    15 ms  12.148.6.194.rev.sfr.net [194.6.148.12]
+  7    11 ms    11 ms    11 ms  141.101.67.48
+  8    12 ms    10 ms    10 ms  172.71.124.4
+  9    14 ms    10 ms    19 ms  104.26.11.233
+
+Itinéraire déterminé.
 ```
 
-Par un seul paquet donc.
+Par 9 paquets donc.
 
 ---
 
