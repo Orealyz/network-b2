@@ -193,9 +193,13 @@ Par 9 paquets donc.
 ☀️ **IP publique**
 
 ```
-PS C:\Users\b> ipconfig
+PS C:\Users\b> curl  ifconfig.me
+
+
+StatusCode        : 200
+StatusDescription : OK
+Content           : 195.7.117.146
 [...]
- Passerelle par défaut. . . . . . . . . : 10.33.79.254
 ```
 
 ---
