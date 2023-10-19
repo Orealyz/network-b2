@@ -18,6 +18,7 @@ Adresse IPv4. . . . . . . . . . . . . .: 10.33.76.199(préféré)
  Masque de sous-réseau. . . . . . . . . : 255.255.240.0
 /20
 ```
+
 ---
 
 ☀️ **Déso pas déso**
@@ -25,9 +26,11 @@ Adresse IPv4. . . . . . . . . . . . . .: 10.33.76.199(préféré)
 ```
 Adresse de réseau : 10.33.64.0
 ```
+
 ```
 Adresse de broadcast : 10.33.79.255
 ```
+
 ```
 Nombre d'adresses IP disponibles : 4094
 ```
@@ -40,6 +43,7 @@ Nombre d'adresses IP disponibles : 4094
 PS C:\Users\b> hostname
 DESKTOP-0JKFI2T
 ```
+
 ---
 
 ☀️ **Passerelle du réseau**
@@ -60,7 +64,6 @@ PS C:\Users\b> arp -a
 ---
 
 ☀️ **Serveur DHCP et DNS**
-
 
 ```
 PS C:\Users\b> ipconfig /all
@@ -115,21 +118,21 @@ Durée approximative des boucles en millisecondes :
 
 ☀️ **Go mater une vidéo youtube et déterminer, pendant qu'elle tourne...**
 
-```
-PS C:\Windows\system32> netstat -n -b -a
-
-Connexions actives
-[...]
- [chrome.exe]
-  TCP    192.168.1.6:50897      52.222.149.65:443      ESTABLISHED
-```
+J'ai utiliséWireshark pour m'aider à identifier l'adresse ip du serveur auquel je suis connecté pour regarder la vidéo
 
 ```
-443 
+PS C:\Windows\system32> netstat -n -b -a | Select-String 172.217.20.163 -Context 0,1
+
+>   TCP    10.33.76.199:50746     172.217.20.163:443     ESTABLISHED
+   [chrome.exe]
 ```
 
 ```
-50897
+443
+```
+
+```
+50746
 ```
 
 ---
@@ -173,6 +176,7 @@ avec un maximum de 30 sauts :
   1     1 ms     1 ms     1 ms  bouygues.lan [2001:861:4482:b250:46d4:54ff:fe85:8895]
   2     *        *        *     Délai d’attente de la demande dépassé.
 ```
+
 Par un seul paquet donc.
 
 ---
@@ -184,10 +188,10 @@ PS C:\Users\b> ipconfig
 [...]
  Passerelle par défaut. . . . . . . . . : 10.33.79.254
 ```
+
 ---
 
 ☀️ **Scan réseau**
-
 
 ```
 PS C:\Users\b> arp -a
@@ -201,11 +205,10 @@ Interface : 172.16.64.1 --- 0x3
   239.255.255.250       01-00-5e-7f-ff-fa     statique
   [...]
 ```
+
 Il y en a 35.
 
 # III. Le requin
-
-
 
 ---
 
@@ -231,12 +234,10 @@ Addresses:  2a00:1450:4007:818::200e
           142.250.179.110
 ```
 
-[DNS](./captures/dns.pcap)
----
+## [DNS](./captures/dns.pcap)
 
 ☀️ **Capture TCP**
 
 [TCP](./captures/tcp.pcap)
 
 ---
-
