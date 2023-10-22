@@ -229,18 +229,8 @@ rtt min/avg/max/mdev = 0.594/0.606/0.618/0.012 ms
 sudo mkdir -p /var/www/site_nul/
 ```
 
-```
-  [root@web ~]# sudo cat /var/www/site_nul/index.html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Site Nul</title>
-</head>
-<body>
-    <h1>Bienvenue sur mon site nul !</h1>
-</body>
-</html>
-```
+
+
  
 ```
 [root@web ~]# sudo cat /var/www/site_nul/index.html
@@ -284,9 +274,9 @@ server {
 
 ```
 nginx: configuration file /etc/nginx/nginx.conf test is successful
-[root@web ~]# ss -tuln | grep ':80'
-tcp   LISTEN 0      511          0.0.0.0:80        0.0.0.0:*
-tcp   LISTEN 0      511             [::]:80           [::]:*
+[root@web ~]# sudo ss -alpnt | grep nginx
+LISTEN 0      511          0.0.0.0:80        0.0.0.0:*    users:(("nginx",pid=2221,fd=6),("nginx",pid=2182,fd=6))
+LISTEN 0      511             [::]:80           [::]:*    users:(("nginx",pid=2221,fd=7),("nginx",pid=2182,fd=7))
 [root@web ~]# sudo firewall-cmd --list-ports
 80/tcp
 ```
