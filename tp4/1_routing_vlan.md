@@ -1,49 +1,12 @@
 # I. Topo 1 : VLAN et Routing
 
-Dans cette partie, on va donner un peu de sens aux VLANs :
-
-- un pour les serveurs du réseau
-  - on simulera ça avec un p'tit serveur web
-- un pour les admins du réseau
-- un pour les autres random clients du réseau
-
-Cela dit, il faut que tout ce beau monde puisse se ping, au moins joindre le réseau des serveurs, pour accéder au super site-web.
-
-**Bien que bloqué au niveau du switch à cause des VLANs, le trafic pourra passer d'un VLAN à l'autre grâce à un routeur.**
-
-Il assurera son job de routeur traditionnel : router entre deux réseaux. Sauf qu'en plus, il gérera le changement de VLAN à la volée.
-
 ## 1. Topologie 1
-
-![Topologie 1](../img/topo1.png)
 
 ## 2. Adressage topologie 1
 
-Les réseaux et leurs VLANs associés :
-
-| Réseau    | Adresse        | VLAN associé |
-| --------- | -------------- | ------------ |
-| `clients` | `10.1.10.0/24`  | 10           |
-| `admins`  | `10.1.20.0/24` | 20           |
-| `servers` | `10.1.30.0/24` | 30           |
-
-L'adresse des machines au sein de ces réseaux :
-
-| Node               | `clients`       | `admins`         | `servers`        |
-| ------------------ | --------------- | ---------------- | ---------------- |
-| `pc1.clients.tp4`  | `10.1.10.1/24`   | x                | x                |
-| `pc2.clients.tp4`  | `10.1.10.2/24`   | x                | x                |
-| `adm1.admins.tp4`  | x               | `10.1.20.1/24`   | x                |
-| `web1.servers.tp4` | x               | x                | `10.1.30.1/24`   |
-| `r1`               | `10.1.10.254/24` | `10.1.20.254/24` | `10.1.30.254/24` |
-
 ## 3. Setup topologie 1
 
-🖥️ VM `web1.servers.tp4`, déroulez la [Checklist VM Linux](#checklist-vm-linux) dessus
-
 🌞 **Adressage**
-
-- définissez les IPs statiques sur toutes les machines **sauf le *routeur***
 
 ```
 PC1> ip 10.1.10.1
@@ -76,10 +39,7 @@ $1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group defau
 
 🌞 **Configuration des VLANs**
 
-- référez-vous au [mémo Cisco](../../../../cours/memo/memo_cisco.md)
-- déclaration des VLANs sur le switch `sw1`
-- ajout des ports du switches dans le bon VLAN (voir [le tableau d'adressage de la topo 2 juste au dessus](#2-adressage-topologie-2))
-- il faudra ajouter le port qui pointe vers le *routeur* comme un *trunk* : c'est un port entre deux équipements réseau (un *switch* et un *routeur*)
+
 ```
 sw1#show vlan br
 
@@ -97,27 +57,6 @@ VLAN Name                             Status    Ports
 
 ➜ **Pour le *routeur***
 
-- référez-vous au [mémo Cisco](../../../../cours/memo/memo_cisco.md)
-- ici, on va avoir besoin d'un truc très courant pour un *routeur* : qu'il porte plusieurs IP sur une unique interface
-  - avec Cisco, on crée des "sous-interfaces" sur une interface
-  - et on attribue une IP à chacune de ces sous-interfaces
-- en plus de ça, il faudra l'informer que, pour chaque interface, elle doit être dans un VLAN spécifique
-
-Pour ce faire, un exemple. On attribue deux IPs `192.168.1.254/24` VLAN 10 et `192.168.2.254` VLAN20 à un *routeur*. L'interface concernée sur le *routeur* est `fastEthernet 0/0` :
-
-```cisco
-# conf t
-
-(config)# interface fastEthernet 0/0.10
-R1(config-subif)# encapsulation dot1Q 10
-R1(config-subif)# ip addr 192.168.1.254 255.255.255.0 
-R1(config-subif)# exit
-
-(config)# interface fastEthernet 0/0.20
-R1(config-subif)# encapsulation dot1Q 20
-R1(config-subif)# ip addr 192.168.2.254 255.255.255.0 
-R1(config-subif)# exit
-```
 
 🌞 **Config du *routeur***
 
@@ -125,39 +64,122 @@ R1(config-subif)# exit
   - 3 sous-interfaces, chacune avec son IP et un VLAN associé
 
 ```
-R1#show ip interface brief
+R1#show ip interface br
 Interface                  IP-Address      OK? Method Status                Protocol
-FastEthernet0/0            unassigned      YES unset  administratively down down
-FastEthernet0/0.10         10.1.10.254     YES manual administratively down down
-FastEthernet0/0.20         10.1.20.254     YES manual administratively down down
-FastEthernet0/0.30         10.1.30.254     YES manual administratively down down
+FastEthernet0/0            unassigned      YES NVRAM  up                    up
+FastEthernet0/0.10         10.1.10.254     YES NVRAM  up                    up
+FastEthernet0/0.20         10.1.20.254     YES NVRAM  up                    up
+FastEthernet0/0.30         10.1.30.254     YES NVRAM  up                    up
 [...]
 ```
 
 🌞 **Vérif**
 
-- tout le monde doit pouvoir ping le routeur sur l'IP qui est dans son réseau
-- en ajoutant une route vers les réseaux, ils peuvent se ping entre eux
-  - ajoutez une route par défaut sur les VPCS
-  - ajoutez une route par défaut sur la machine virtuelle
-  - testez des `ping` entre les réseaux
+```
+PC1> ping 10.1.10.254
 
+84 bytes from 10.1.10.254 icmp_seq=1 ttl=255 time=9.374 ms
+84 bytes from 10.1.10.254 icmp_seq=2 ttl=255 time=6.807 ms
 
+```
 
-interface Ethernet0/0
-switchport mode access
-switchport access vlan 10
-exit
-interface Ethernet0/1
-switchport mode access
-switchport access vlan 10
-exit
-interface Ethernet0/2
-switchport mode access
-switchport access vlan 20
-exit
-interface Ethernet0/3
-switchport mode access
-switchport access vlan 30
-exit
-switchport trunk allowed vlan add 10,20,30
+```
+PC2> ping 10.1.10.254
+
+84 bytes from 10.1.10.254 icmp_seq=1 ttl=255 time=9.110 ms
+^C
+
+```
+
+```
+adm1> ping 10.1.20.254
+
+84 bytes from 10.1.20.254 icmp_seq=1 ttl=255 time=10.305 ms
+^C
+
+```
+
+```
+[root@localhost ~]# ping 10.1.30.254
+PING 10.1.30.254 (10.1.30.254) 56(84) bytes of data.
+64 bytes from 10.1.30.254: icmp_seq=1 ttl=255 time=18.1 ms
+^C
+--- 10.1.30.254 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 18.090/18.090/18.090/0.000 ms
+```
+
+```
+PC1> ip  10.1.10.1 255.255.255.0 10.1.10.254
+Checking for duplicate address...
+PC1 : 10.1.10.1 255.255.255.0 gateway 10.1.10.254
+
+```
+
+```
+adm1> ip  10.1.20.1 255.255.255.0 10.1.20.254
+Checking for duplicate address...
+adm1 : 10.1.20.1 255.255.255.0 gateway 10.1.20.254
+
+```
+
+```
+PC2> ip  10.1.10.2 255.255.255.0 10.1.10.254
+Checking for duplicate address...
+PC2 : 10.1.10.2 255.255.255.0 gateway 10.1.10.254
+
+```
+
+```
+```
+[root@localhost network-scripts]# cat ifcfg-enp0s3
+NAME=enp0s3
+DEVICE=enp0s3
+
+BOOTPROTO=static
+ONBOOT=yes
+
+IPADDR=10.1.30.1
+NETMASK=255.255.255.0
+
+GATEWAY=10.1.30.254
+```
+```
+
+```
+PC2> ping 10.1.20.1
+
+84 bytes from 10.1.20.1 icmp_seq=1 ttl=63 time=19.794 ms
+```
+
+```
+adm1> ping 10.1.10.1
+
+84 bytes from 10.1.10.1 icmp_seq=1 ttl=63 time=28.828 ms
+^C
+```
+```
+PC1> ping 10.1.30.1
+
+84 bytes from 10.1.30.1 icmp_seq=1 ttl=63 time=20.193 ms
+^C
+
+```
+
+```
+adm1> ping 10.1.30.1
+
+84 bytes from 10.1.30.1 icmp_seq=1 ttl=63 time=20.147 ms
+^C
+
+```
+
+```
+[root@localhost network-scripts]# ping 10.1.10.1
+PING 10.1.10.1 (10.1.10.1) 56(84) bytes of data.
+64 bytes from 10.1.10.1: icmp_seq=1 ttl=63 time=31.1 ms
+^C
+--- 10.1.10.1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 31.107/31.107/31.107/0.000 ms
+```
