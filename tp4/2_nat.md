@@ -38,6 +38,30 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 20/20/24 ms
 ```
 🌞 **Configurez le NAT**
 
+```
+conf t
+interface FastEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 10.1.10.254 255.255.255.0
+ ip nat inside
+exit
+interface FastEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 10.1.20.254 255.255.255.0
+ ip nat inside
+exit
+interface FastEthernet0/0.30
+ encapsulation dot1Q 30
+ ip address 10.1.30.254 255.255.255.0
+exit
+interface FastEthernet0/1
+ ip address dhcp
+ ip nat outside
+exit
+access-list 1 permit any
+ip nat inside source list 1 interface FastEthernet0/1 overload
+
+```
 
 ```
 R1#conf t
