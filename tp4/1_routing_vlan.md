@@ -60,8 +60,6 @@ VLAN Name                             Status    Ports
 
 🌞 **Config du *routeur***
 
-- attribuez ses IPs au *routeur*
-  - 3 sous-interfaces, chacune avec son IP et un VLAN associé
 
 ```
 R1#show ip interface br
