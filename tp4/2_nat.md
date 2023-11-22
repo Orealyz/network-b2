@@ -86,11 +86,29 @@ R1(config)#ip nat inside source list 1 interface FastEthernet 0/1 overload
 
 ```
 
+```
+R1(config)#ip domain-lookup
+R1(config)#ip name-server 8.8.8.8
+R1(config)#ip name-server 8.8.4.4
+R1(config)#exit
+R1#
+*Mar  1 00:34:57.923: %SYS-5-CONFIG_I: Configured from console by console
+R1#ping google.com
+
+Translating "google.com"...domain server (192.168.1.254) [OK]
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 216.58.214.78, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 20/30/36 ms
+
+```
+
 🌞 **Test**
 
 La route est déjà activé grâce à la première topologie.
 
-
+Problème pour ping vue avec toi, cela fonctionne mais depuis les vms
 
 ````
 PC1> ip dns 8.8.8.8
