@@ -363,6 +363,7 @@ jobs:
 
 ```
 - [netdata](./netdata.png)
+
 🌞 **Alerting Discord**
 
 - [discord](./discord.png)
