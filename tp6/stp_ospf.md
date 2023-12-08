@@ -580,6 +580,7 @@ DDORA IP 10.6.3.100/24 GW 10.6.3.254
 
 ```
 ```
+[root@localhost etc]$ journalctl -u dhcpd
 Dec 07 14:53:48 localhost.localdomain dhcpd[743]: DHCPDISCOVER from 00:50:79:66:68:01 via enp0s3
 Dec 07 14:53:49 localhost.localdomain dhcpd[743]: DHCPOFFER on 10.6.1.100 to 00:50:79:66:68:01 (waf.tp6.b1) via enp0s3
 Dec 07 14:53:52 localhost.localdomain dhcpd[743]: DHCPREQUEST for 10.6.1.100 (10.6.1.253) from 00:50:79:66:68:01 (waf.tp6.b1) via enp0s3
